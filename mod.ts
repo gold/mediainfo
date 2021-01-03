@@ -40,20 +40,28 @@ class MediaInfo {
 
     const cmd = Deno.run({
       cmd:[MEDIA_INFO_CMD, ...options],
-      stdin: 'piped', stdout: 'piped', stderr: 'piped'
+      stdin: 'piped', stdout: 'piped'
     });
-
-    const { code } = await cmd.status();
-    result.exitCode = code;
 
     const rawOutput = await cmd.output();
     const outputString = new TextDecoder().decode(rawOutput);
 
+    // JSON output may have been a specified option, but if there were other
+    // options included as well, e.g., --Version, then the mediainfo command
+    // returns non-JSON version information insstead of getting specified media
+    // file's info in JSON format. That's an expected case and is not an error.
+    // It is handled as such in the catch block.
     try {
       result.info = JSON.parse(outputString);
-    } catch (jsonParseError) {
+    } catch (requiredArgButNotNecessary) {
       result.info = outputString.replace(/\n$/, '');
     }
+
+    const { code } = await cmd.status();
+    result.exitCode = code;
+
+    cmd.stdin.close();
+    cmd.close();
 
     return result;
   }
@@ -61,10 +69,11 @@ class MediaInfo {
   static async isMediaInfoCommandExist() {
     const cmd = Deno.run({
       cmd:['bash', 'which', MEDIA_INFO_CMD],
-      stdin: 'piped', stdout: 'piped', stderr: 'piped'
+      stdout: 'piped'
     });
     try {
       const { code } = await cmd.status();
+      cmd.stdout.close();
       cmd.close();
       return code === 0;
     } catch (e) {
