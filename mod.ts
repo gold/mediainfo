@@ -48,7 +48,7 @@ class MediaInfo {
 
     // JSON output may have been a specified option, but if there were other
     // options included as well, e.g., --Version, then the mediainfo command
-    // returns non-JSON version information insstead of getting specified media
+    // returns non-JSON version information instead of getting specified media
     // file's info in JSON format. That's an expected case and is not an error.
     // It is handled as such in the catch block.
     try {

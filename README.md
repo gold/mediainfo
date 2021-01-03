@@ -26,7 +26,7 @@ The syntax varies somewhat when used with this Deno module. The following exampl
 
 `my-deno-script.ts`
 ```javascript
-import { DenonConfig } from 'https://deno.land/x/mediainfo/mod.ts';
+import { mediainfo } from 'https://deno.land/x/mediainfo/mod.ts';
 
 // These items will be sent to the mediainfo program as command line arguments.
 const args = ['audio-file.mp3']
