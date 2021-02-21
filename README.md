@@ -99,6 +99,7 @@ The get() method returns a simplified default JSON object.
 
 The getRaw() method contains the same data in a more comprehensive and nested message shape:
 
+### getRaw() results message shape:
 ```ts
 {
   "exitCode": number,
