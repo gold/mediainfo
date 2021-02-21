@@ -9,6 +9,15 @@ const MEDIA_INFO_CMD = 'mediainfo';
 const DEFAULT_OUTPUT_FORMAT = '--Output=JSON';
 const OUTPUT_FORMAT_RX = /^--Output=\w+$/;
 
+interface Info {
+  [key: string]: any
+}
+
+interface ResultObject {
+  exitCode: number,
+  info: Info
+}
+
 class MediaInfo {
 
   // Unlike mediainfo behavior, our wrapper has JSON output as the default.
@@ -28,12 +37,62 @@ class MediaInfo {
     return params;
   }
 
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // params represents a list of strings.
   //
   // Order is not important.
   //
-  // They are passed to the 'mediainfo' command and parsed there,
-  static async get(...params: Array<string>) {
+  // get() returns the following JSON message shape, passed through from
+  // getRaw(). The raw nested data structure is simplified to look like:
+  //
+  //   {
+  //     "exitCode": number,
+  //     "info": Array<object> | string
+  //   }
+  //
+  // If binary command mediainfo is successful, exitCode = 0 and info is an
+  // array of objects or a string.
+  //
+  // If binary command mediainfo is not successful, exitCode = 1 and info is a
+  // string.
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  static async get(...params: Array<string>): Promise<ResultObject> {
+    const resultTrack: ResultObject = { exitCode: 0, info: [] };
+    const resultRaw: ResultObject = await MediaInfo.getRaw(...params);
+
+    resultTrack.exitCode = resultRaw.exitCode;
+
+    if (typeof resultRaw.info === 'object' && 'media' in resultRaw.info) {
+      resultTrack.info = resultRaw.info.media.track;
+    } else if (typeof resultRaw.info === 'string') {
+      resultTrack.info = resultRaw.info;
+    } else {
+      console.error('unknown data structure returned from getRaw()');
+      Deno.exit(1);
+    }
+
+    return resultTrack;
+  }
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // params represents a list of strings.
+  //
+  // Order is not important.
+  //
+  // getRaw() returns the following data structure, derived from mediainfo
+  // binary return value:
+  //
+  //   {
+  //     "exitCode": number,
+  //     "info": object {
+  //       "media": object {
+  //         "@ref": string,
+  //         "track": Array<object>
+  //       }
+  //     }
+  //   }
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  static async getRaw(...params: Array<string>): Promise<ResultObject> {
     const result = { exitCode: 0, info: {} };
 
     const options = MediaInfo.setOutputFormat(params) ;

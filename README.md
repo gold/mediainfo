@@ -16,11 +16,14 @@ $ sudo apt install mediainfo
 
 The original binary program's [docs](https://manpages.ubuntu.com/manpages/focal/man1/mediainfo.1.html) provide usage details.
 
-Unlike the original program, this Deno module sets the default output to be JSON.
+Unlike the original program, this Deno module sets the default output to be
+JSON.
 
-Therefore, if you omit the `--Output=<format>` option, the output will be JSON. However, you can override the format with either XML or TEXT
+Therefore, if you omit the `--Output=<format>` option, the output will be JSON.
+However, you can override the format with either, HTML, XML, or TEXT
 
-The syntax varies somewhat when used with this Deno module. The following examples will illustrate.
+The syntax varies somewhat when used with this Deno module. The following
+examples will illustrate.
 
 ## Examples
 
@@ -50,6 +53,39 @@ console.info(result.info);
 // Of course, you can do whatever you want, based on this information.
 Deno.exit(result.exitCode);
 ```
+
+## Raw Results
+
+This module's straightforward get() method returns a default JSON object,
+simplified to:
+
+```json
+{
+  "exitCode": number,
+  "info": Array<object> | string
+}
+```
+
+"info" key typically is a list of exactly two elements, each of which contain
+the meta data for the input file.
+
+However, use can use this module's getRaw() method to access the original meta
+data:
+
+```json
+{
+  "exitCode": number,
+  "info": object {
+    "media": object {
+      "@ref": string,
+      "track": Array<object>
+    }
+  }
+}
+```
+
+The input media file's meta data is referenced by the "track" key. "@ref" is the
+input file name.
 
 ## Contribute
 
