@@ -58,7 +58,7 @@ Deno.exit(result.exitCode);
 
 The get() method returns a simplified default JSON object.
 
-Some meta data keys omitted in this example.
+<i>NOTE: Some meta data keys omitted in this example.</i>
 
 ### get() results:
 ```json
@@ -67,38 +67,37 @@ Some meta data keys omitted in this example.
   "info": [
     {
       "@type": "General",
-      AudioCount: "1",
-      FileExtension: "m4a",
-      Format: "MPEG-4",
-      Album: "Best of Linus",
-      Track: "Linus pronounces stuff",
-      Track_Position: "1",
-      Performer: "Linus Torvalds",
-      Format_Profile: "Apple audio with iTunes info",
-      CodecID: "M4A ",
-      CodecID_Compatible: "mp42/mp41/isom/iso2",
-      FileSize: "358116",
-      Duration: "19.737",
+      "AudioCount": "1",
+      "FileExtension": "m4a",
+      "Format": "MPEG-4",
+      "Album": "Best of Linus",
+      "Track": "Linus pronounces stuff",
+      "Track_Position": "1",
+      "Performer": "Linus Torvalds",
+      "Format_Profile": "Apple audio with iTunes info",
+      "CodecID": "M4A ",
+      "CodecID_Compatible": "mp42/mp41/isom/iso2",
+      "FileSize": "358116",
+      "Duration": "19.737"
     },
     {
       "@type": "Audio",
-      StreamOrder: "0",
-      ID: "1",
-      Format: "AAC",
-      Format_AdditionalFeatures: "LC",
-      CodecID: "mp4a-40-2",
-      Duration: "19.737",
-      BitRate_Mode: "VBR",
-      BitRate: "125588",
-      Channels: "2",
-      ChannelPositions: "Front: L R",
+      "StreamOrder": "0",
+      "ID": "1",
+      "Format": "AAC",
+      "Format_AdditionalFeatures": "LC",
+      "CodecID": "mp4a-40-2",
+      "Duration": "19.737",
+      "BitRate_Mode": "VBR",
+      "BitRate": "125588",
+      "Channels": "2",
+      "ChannelPositions": "Front: L R"
     }
   ]
 }
 ```
 
 The getRaw() method contains the same data in a more comprehensive and nested message shape:
-
 
 ```ts
 {
