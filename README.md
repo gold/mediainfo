@@ -54,25 +54,53 @@ console.info(result.info);
 Deno.exit(result.exitCode);
 ```
 
-## Raw Results
+## Default and Raw Results
 
-This module's straightforward get() method returns a default JSON object,
-simplified to:
+The get() method returns a simplified default JSON object.
 
+Some meta data keys omitted in this example.
+
+### get() results:
 ```json
 {
-  "exitCode": number,
-  "info": Array<object> | string
+  "exitCode": 0,
+  "info": [
+    {
+      "@type": "General",
+      AudioCount: "1",
+      FileExtension: "m4a",
+      Format: "MPEG-4",
+      Album: "Best of Linus",
+      Track: "Linus pronounces stuff",
+      Track_Position: "1",
+      Performer: "Linus Torvalds",
+      Format_Profile: "Apple audio with iTunes info",
+      CodecID: "M4A ",
+      CodecID_Compatible: "mp42/mp41/isom/iso2",
+      FileSize: "358116",
+      Duration: "19.737",
+    },
+    {
+      "@type": "Audio",
+      StreamOrder: "0",
+      ID: "1",
+      Format: "AAC",
+      Format_AdditionalFeatures: "LC",
+      CodecID: "mp4a-40-2",
+      Duration: "19.737",
+      BitRate_Mode: "VBR",
+      BitRate: "125588",
+      Channels: "2",
+      ChannelPositions: "Front: L R",
+    }
+  ]
 }
 ```
 
-"info" key typically is a list of exactly two elements, each of which contain
-the meta data for the input file.
+The getRaw() method contains the same data in a more comprehensive and nested message shape:
 
-However, use can use this module's getRaw() method to access the original meta
-data:
 
-```json
+```ts
 {
   "exitCode": number,
   "info": object {
